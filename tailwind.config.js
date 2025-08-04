@@ -7,8 +7,10 @@ const config = {
       colors: {
         brand: {
           navy: '#1A2A3A',
+          navyLight: '#2A3A4A',
           cream: '#F5F2EA',
           gold: '#C3A34B',
+          goldDark: '#b39333',
           gray: '#8C8C8C',
         },
       },

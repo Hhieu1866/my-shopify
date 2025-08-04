@@ -102,7 +102,7 @@ export function Header({
               to="/"
               className={`${isScrolled ? 'text-xl sm:text-2xl' : 'text-2xl sm:text-[20px]'} absolute left-1/2 -translate-x-1/2 text-center font-playfair tracking-wider transition-all duration-300 ease-in-out max-[550px]:hidden lg:static lg:translate-x-0 lg:text-left`}
             >
-              <h1 className="font-medium">HTH</h1>
+              <h1 className="font-medium uppercase">Elowen</h1>
             </NavLink>
 
             {/* Desktop navigation */}
@@ -184,7 +184,7 @@ export function HeaderMenu({
                   to={url}
                   end // product/boot --> products NOT ACTIVE
                   className={({isActive}) =>
-                    `${baseClassName} block py-2 text-lg ${isActive ? 'text-brand-gold' : 'text-brand-navy'}`
+                    `${baseClassName} block py-2 ${isActive ? 'text-brand-gold' : 'text-brand-navy'}`
                   }
                 >
                   {item.title}
@@ -238,7 +238,7 @@ export function HeaderMenu({
               to={url}
               end // product/boot --> products NOT ACTIVE
               className={({isActive}) =>
-                `${baseClassName} ${isActive ? 'text-brand-gold' : 'text-brand-navy'}`
+                `${baseClassName} text-[15px] ${isActive ? 'text-brand-gold' : 'text-brand-navy'}`
               }
             >
               {item.title}
@@ -254,7 +254,7 @@ function HeaderCtas({
   cart,
 }: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
   return (
-    <nav className="flex items-center space-x-2 sm:space-x-3 lg:space-x-8">
+    <nav className="flex items-center space-x-2 sm:space-x-3 lg:space-x-5">
       <SearchToggle />
 
       <NavLink
@@ -301,7 +301,7 @@ function CartBadge({count}: {count: number | null}) {
 
   return (
     <button
-       className="relative p-2 transition-all duration-200 after:absolute after:bottom-0 after:left-1/2 after:h-[1px] after:w-0 after:-translate-x-1/2 after:bg-brand-gold after:transition-all after:duration-300 after:content-[''] hover:text-brand-gold hover:after:w-full"
+      className="relative p-2 transition-all duration-200 after:absolute after:bottom-0 after:left-1/2 after:h-[1px] after:w-0 after:-translate-x-1/2 after:bg-brand-gold after:transition-all after:duration-300 after:content-[''] hover:text-brand-gold hover:after:w-full"
       onClick={() => {
         open('cart');
         publish('cart_viewed', {

@@ -1,5 +1,5 @@
 import {Suspense} from 'react';
-import {Await, NavLink} from 'react-router';
+import {Await, Form, NavLink} from 'react-router';
 import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
 
 interface FooterProps {
@@ -17,14 +17,68 @@ export function Footer({
     <Suspense>
       <Await resolve={footerPromise}>
         {(footer) => (
-          <footer className="footer">
-            {footer?.menu && header.shop.primaryDomain?.url && (
-              <FooterMenu
-                menu={footer.menu}
-                primaryDomainUrl={header.shop.primaryDomain.url}
-                publicStoreDomain={publicStoreDomain}
-              />
-            )}
+          <footer className="bg-brand-navy text-white">
+            {/* newsletter signup section */}
+            <div className="border-b border-white/10">
+              <div className="container mx-auto px-4 py-12">
+                <div className="mx-auto max-w-xl text-center">
+                  <h2 className="mb-4 font-playfair text-2xl">
+                    Join the Artisans Circle
+                  </h2>
+                  <p className="mb-6 font-source text-sm text-gray-300">
+                    Subscribe to receive updates on new collections,
+                    craftsmanship insights, and exclusive offers.
+                  </p>
+                  <Form className="flex gap-3">
+                    <input
+                      type="email"
+                      placeholder="Your email address"
+                      className="flex-1 rounded-md border-white/20 bg-white/10 px-4 py-3 font-source text-white placeholder:text-gray-400"
+                      required
+                    />
+                    <button
+                      type="submit"
+                      className="rounded-md bg-brand-gold px-6 py-3 font-source text-sm font-medium text-white transition-colors duration-300 hover:bg-brand-goldDark"
+                    >
+                      Subscribe
+                    </button>
+                  </Form>
+                </div>
+              </div>
+            </div>
+
+            {/* main footer content */}
+            <div className="container mx-auto px-4 py-12">
+              <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
+                {/* brand column */}
+                <div className="space-y-6">
+                  <h3 className="font-playfair text-2xl">ELOWEN</h3>
+                  <p className="font-source text-sm text-gray-300 leading-relaxed">
+                    Artisanal footwear for the modern sophisticate. Crafted with precision, designed for distinction
+                  </p>
+                </div>
+
+                {/* contact column */}
+
+                {/* quick links column */}
+
+                {/* policies column */}
+              </div>
+            </div>
+
+            {/* copyright bar */}
+            <div className="border-t border-white/10">
+              <div className="container mx-auto px-4 py-6">
+                <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-5">
+                  <p className="font-source text-sm text-gray-400">
+                    © {new Date().getFullYear()} Elowen. All rights reserved.
+                  </p>
+                  <p className="font-source text-sm text-gray-400">
+                    Crafted with passion in VietNam
+                  </p>
+                </div>
+              </div>
+            </div>
           </footer>
         )}
       </Await>

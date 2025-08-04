@@ -72,7 +72,7 @@ export function ProductForm({
                     <button
                       type="button"
                       className={`product-options-item${
-                        exists && !selected ? ' link' : ''
+                        exists && !selected ? 'link' : ''
                       }`}
                       key={option.name + name}
                       style={{
@@ -102,8 +102,9 @@ export function ProductForm({
         );
       })}
       <AddToCartButton
-        disabled={!selectedVariant || !selectedVariant.availableForSale}
-        onClick={() => {
+        // disabled={!selectedVariant || !selectedVariant.availableForSale}
+        disabled={!selectedVariant}
+        afterAddToCart={() => {
           open('cart');
         }}
         lines={
@@ -118,7 +119,8 @@ export function ProductForm({
             : []
         }
       >
-        {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
+        {/* {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'} */}
+        Add to cart
       </AddToCartButton>
     </div>
   );

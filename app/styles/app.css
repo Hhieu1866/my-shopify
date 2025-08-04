@@ -12,6 +12,19 @@ img {
   border-radius: 4px;
 }
 
+@keyframes progress {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-progress {
+  animation: progress 2s ease-in-out infinite;
+}
+
 /*
 * --------------------------------------------------
 * Non anchor links
@@ -209,7 +222,6 @@ button.reset:hover:not(:has(> *)) {
 .header-ctas > * {
   min-width: fit-content;
 }
-
 
 /*
 * --------------------------------------------------
