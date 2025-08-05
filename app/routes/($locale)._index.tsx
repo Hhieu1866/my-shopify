@@ -158,10 +158,10 @@ export default function Homepage() {
                 Crafted by Master Artisans
               </h2>
               <p className="mb-8 font-source leading-relaxed text-gray-600">
-                Each ELOWEN shoe reflects a legacy of skilled craftsmanship,
-                handcrafted with precision over more than 30 hours. Our expert
-                artisans blend traditional methods with modern design to deliver
-                footwear of outstanding quality.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae
+                laboriosam aliquam libero saepe assumenda beatae soluta
+                corrupti? Nisi minima, temporibus nemo perferendis eligendi
+                quibusdam magnam.
               </p>
               <Link
                 to="/pages/our-craft"

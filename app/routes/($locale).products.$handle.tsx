@@ -9,9 +9,11 @@ import {
   useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
-import {ProductImage} from '~/components/ProductImage';
-import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import ProductImage from '~/components/ProductImage';
+import {Suspense} from 'react';
+import {Await} from 'react-router';
+import {ProductForm} from '~/components/ProductForm';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -102,28 +104,55 @@ export default function Product() {
   const {title, descriptionHtml} = product;
 
   return (
-    <div className="product">
-      <ProductImage image={selectedVariant?.image} />
-      <div className="product-main">
-        <h1>{title}</h1>
-        <ProductPrice
-          price={selectedVariant?.price}
-          compareAtPrice={selectedVariant?.compareAtPrice}
-        />
-        <br />
-        <ProductForm
-          productOptions={productOptions}
-          selectedVariant={selectedVariant}
-        />
-        <br />
-        <br />
-        <p>
-          <strong>Description</strong>
-        </p>
-        <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-        <br />
+    <div className="pt-48 md:pt-48">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+          {/* left side - img */}
+          <div className="space-y-8">
+            <ProductImage
+              images={product.images.nodes.map((node) => ({
+                id: node.id,
+                url: node.url,
+                altText: node.altText,
+                width: node.width,
+                height: node.height,
+              }))}
+              selectedVariantImage={selectedVariant.image}
+            />
+          </div>
+
+          {/* right side - details and CTA */}
+          <div className="space-y-10">
+            {/* product title and price */}
+            <div className="space-y-4 border-b border-brand-navy/10 pb-6">
+              <h1 className="font-playfair text-3xl text-brand-navy md:text-4xl lg:text-5xl">
+                {product.title}
+              </h1>
+              <ProductPrice
+                price={selectedVariant?.price}
+                compareAtPrice={selectedVariant.compareAtPrice}
+                className="font-source text-xl text-brand-navy"
+              />
+            </div>
+
+            {/* product description */}
+            <div className="max-w-none font-source text-brand-navy/80">
+              <div
+                dangerouslySetInnerHTML={{__html: product.descriptionHtml}}
+              />
+            </div>
+
+            {/* product form */}
+            <ProductForm
+              productOptions={productOptions}
+              selectedVariant={selectedVariant}
+              className=''
+              product={product}
+            />
+          </div>
+        </div>
       </div>
+
       <Analytics.ProductView
         data={{
           products: [
@@ -207,6 +236,15 @@ const PRODUCT_FRAGMENT = `#graphql
         }
       }
     }
+    images(first: 10) {
+      nodes {
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
     selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
       ...ProductVariant
     }
@@ -216,6 +254,18 @@ const PRODUCT_FRAGMENT = `#graphql
     seo {
       description
       title
+    }
+    careInstructions: metafield(namespace: "custom", key: "care_instructions") {
+      value
+    }
+    materials: metafield(namespace: "custom", key: "materials") {
+      value
+    }
+    construction: metafield(namespace: "custom", key: "construction") {
+      value
+    }
+    sizingNotes: metafield(namespace: "custom", key: "sizing_notes") {
+      value
     }
   }
   ${PRODUCT_VARIANT_FRAGMENT}

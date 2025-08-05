@@ -5,7 +5,7 @@ import {Image, Money} from '@shopify/hydrogen';
 import {ArrowRight} from 'lucide-react';
 
 type ProductItemProps = {
-  product: ProductItemFragment;
+  product: ProductItemFragment; 
   loading?: 'eager' | 'lazy';
   hidePrice?: boolean;
 };
