@@ -3,7 +3,7 @@ import {useLoaderData, type MetaFunction} from 'react-router';
 import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
-import {ProductItem} from '~/components/ProductItem';
+import ProductItem from '~/components/ProductItem';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
@@ -115,12 +115,29 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
       width
       height
     }
+    images(first: 10) {
+      nodes {
+        id
+        altText
+        url
+        width
+        height
+      }
+    }
     priceRange {
       minVariantPrice {
         ...MoneyProductItem
       }
       maxVariantPrice {
         ...MoneyProductItem
+      }
+    }
+    variants(first: 1) {
+      nodes {
+        selectedOptions {
+          name
+          value
+        }
       }
     }
   }

@@ -6,7 +6,9 @@ import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
-import {ProductItem} from '~/components/ProductItem';
+
+import {ArrowRight, Star} from 'lucide-react';
+import ProductItem from '~/components/ProductItem';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
@@ -60,8 +62,142 @@ export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
     <div className="home">
-      <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
+      {/* hero section */}
+      <section className="relative h-screen min-h-[600px] bg-brand-navy">
+        <Image
+          alt="Craftsmanship"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          loading="eager"
+          data={{
+            url: '/images/banner.png',
+            width: 1920,
+            height: 1080,
+          }}
+          className="absolute inset-0 size-full object-cover opacity-70"
+        />
+        <div className="container relative mx-auto flex h-full items-center px-4">
+          <div className="max-w-2xl">
+            <h1 className="mb-6 font-playfair text-4xl text-white md:text-6xl">
+              Artisanal Footwear for the Modern Sophisticate
+            </h1>
+            <p className="mb-8 font-source text-lg text-gray-200">
+              Handcrafted excellence, designed for distinction
+            </p>
+            <Link
+              to="collections/all"
+              className="inline-flex items-center bg-brand-gold px-8 py-4 font-source font-medium text-white transition-colors duration-300 hover:bg-brand-goldDark"
+            >
+              Explore Collection
+              <ArrowRight className="ml-2 size-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* recommended products */}
+      <section className="bg-white px-4 py-20">
+        <div className="container mx-auto">
+          <h2 className="mb-12 text-center font-playfair text-3xl">
+            Our Latest Products
+          </h2>
+          <div>
+            <Suspense
+              fallback={
+                // Hiển thị hiệu ứng skeleton loader khi nội dung đang load
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+                  {Array.from({length: 4}).map((_, i) => (
+                    <div
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={`skeleton-${i}`}
+                      className="flex animate-pulse flex-wrap gap-4"
+                    >
+                      <div className="size-20 rounded bg-gray-200" />
+                      <div className="size-20 rounded bg-gray-200" />
+                      <div className="size-20 rounded bg-gray-200" />
+                    </div>
+                  ))}
+                </div>
+              }
+            >
+              <Await resolve={data.recommendedProducts}>
+                {(response) => (
+                  <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+                    {response?.products.nodes.map((product) => (
+                      <ProductItem
+                        key={product.id}
+                        product={product}
+                        loading="lazy"
+                        hidePrice
+                      />
+                    ))}
+                  </div>
+                )}
+              </Await>
+            </Suspense>
+          </div>
+        </div>
+      </section>
+
+      {/* craftsmanship section */}
+      <section className="px-4 py-20">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
+            <div className="">
+              <Image
+                alt="Craftsmanship"
+                className="w-full"
+                data={{
+                  url: '/images/craftsmanship.png',
+                }}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px). 50vw, 33vw"
+                loading="lazy"
+              />
+            </div>
+            <div className="max-w-xl">
+              <h2 className="mb-6 font-playfair text-3xl">
+                Crafted by Master Artisans
+              </h2>
+              <p className="mb-8 font-source leading-relaxed text-gray-600">
+                Each ELOWEN shoe reflects a legacy of skilled craftsmanship,
+                handcrafted with precision over more than 30 hours. Our expert
+                artisans blend traditional methods with modern design to deliver
+                footwear of outstanding quality.
+              </p>
+              <Link
+                to="/pages/our-craft"
+                className="inline-flex items-center font-source font-medium text-brand-navy transition-colors duration-300 hover:text-brand-gold"
+              >
+                Discover Our Process
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* testimonial section */}
+      <section className="bg-brand-navy px-4 py-20 text-white">
+        <div className="container mx-auto max-w-4xl text-center">
+          <div className="flex justify-center gap-0.5">
+            {Array.from({length: 5}).map((_, i) => (
+              <Star
+                // eslint-disable-next-line react/no-array-index-key
+                key={`start-${i}`}
+                fill="#c3a343"
+                color="#e0b840"
+                className="mb-8 size-8"
+              />
+            ))}
+          </div>
+          <blockquote className="mb-8 font-playfair text-2xl md:text-3xl">
+            Every ELOWEN shoe is a refined expression of impeccable
+            craftsmanship and precision — a true embodiment of artisanal luxury.
+          </blockquote>
+          <cite className="font-source not-italic text-gray-300">
+            - The Luxury Report
+          </cite>
+        </div>
+      </section>
     </div>
   );
 }
@@ -89,33 +225,33 @@ function FeaturedCollection({
   );
 }
 
-function RecommendedProducts({
-  products,
-}: {
-  products: Promise<RecommendedProductsQuery | null>;
-}) {
-  return (
-    <div className="recommended-products">
-      <h2 className="text-brand-gold font-playfair font-bold text-2xl">
-        Recommended Products
-      </h2>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Await resolve={products}>
-          {(response) => (
-            <div className="recommended-products-grid">
-              {response
-                ? response.products.nodes.map((product) => (
-                    <ProductItem key={product.id} product={product} />
-                  ))
-                : null}
-            </div>
-          )}
-        </Await>
-      </Suspense>
-      <br />
-    </div>
-  );
-}
+// function RecommendedProducts({
+//   products,
+// }: {
+//   products: Promise<RecommendedProductsQuery | null>;
+// }) {
+//   return (
+//     <div className="recommended-products">
+//       <h2 className="font-playfair text-2xl font-bold text-brand-gold">
+//         Recommended Products
+//       </h2>
+//       <Suspense fallback={<div>Loading...</div>}>
+//         <Await resolve={products}>
+//           {(response) => (
+//             <div className="recommended-products-grid">
+//               {response
+//                 ? response.products.nodes.map((product) => (
+//                     <ProductItem key={product.id} product={product} />
+//                   ))
+//                 : null}
+//             </div>
+//           )}
+//         </Await>
+//       </Suspense>
+//       <br />
+//     </div>
+//   );
+// }
 
 const FEATURED_COLLECTION_QUERY = `#graphql
   fragment FeaturedCollection on Collection {
@@ -150,6 +286,10 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
         amount
         currencyCode
       }
+      maxVariantPrice {
+        amount
+        currencyCode
+      }
     }
     featuredImage {
       id
@@ -157,6 +297,23 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
       altText
       width
       height
+    }
+    images(first: 10) {
+      nodes {
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
+    variants(first: 1) {
+      nodes {
+        selectedOptions {
+          name
+          value
+        }
+      }
     }
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
