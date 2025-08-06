@@ -1,5 +1,5 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from 'react-router';
+import {Link, useLoaderData, type MetaFunction} from 'react-router';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
@@ -62,11 +62,88 @@ export default function Page() {
   const {page} = useLoaderData<typeof loader>();
 
   return (
-    <div className="page">
-      <header>
-        <h1>{page.title}</h1>
-      </header>
-      <main dangerouslySetInnerHTML={{__html: page.body}} />
+    <div className="min-h-screen pt-24 md:pt-32">
+      {/* hero section */}
+      <section className="bg-brand-navy px-4 py-24">
+        <div className="container mx-auto">
+          <div className="mx-auto max-w-4xl text-center">
+            <h1 className="mb-6 font-playfair text-2xl text-white md:text-3xl">
+              {page.title}
+            </h1>
+            {page.subtitle?.value && (
+              <div
+                className="font-source text-lg text-brand-cream"
+                dangerouslySetInnerHTML={{__html: page.subtitle.value}}
+              />
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* content section */}
+      <section className="bg-white px-4 pt-20 pb-4 md:pt-28">
+        <div className="container mx-auto">
+          <div className="mx-auto max-w-3xl">
+            <div className="max-w-none">
+              <div className="font-source leading-relaxed text-brand-navy/80 md:text-xl">
+                {page.introText?.value && (
+                  <div
+                    className="mb-16"
+                    dangerouslySetInnerHTML={{__html: page.introText.value}}
+                  ></div>
+                )}
+              </div>
+
+              <div
+                className="font-source text-brand-navy/80"
+                dangerouslySetInnerHTML={{
+                  __html: page.body
+                    .replace(
+                      /<h2/g,
+                      "<h2 class = 'font-playfair text-2xl text-brand-navy mt-16 mb-8'",
+                    )
+                    .replaceAll(
+                      /<h3/g,
+                      "<h3 class = 'font-playfair text-xl text-brand-navy mt-12 mb-4'",
+                    ),
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA section */}
+      {page.ctaContent?.value && (
+        <section className="bg-white pt-8 px-4 pb-12">
+          <div className="container mx-auto">
+            <div className="mx-auto max-w-3xl">
+              <div
+                className="font-source text-brand-navy/80"
+                dangerouslySetInnerHTML={{
+                  __html: page.ctaContent.value
+                    .replace(
+                      /<h2/g,
+                      "<h2 class = 'font-playfair text-2xl text-brand-navy mt-16 mb-8'",
+                    )
+                    .replaceAll(
+                      /<h3/g,
+                      "<h3 class = 'font-playfair text-xl text-brand-navy mt-12 mb-4'",
+                    ),
+                }}
+              />
+
+              <Link
+                className="mt-8 inline-flex items-center bg-brand-navy px-8 py-4 font-source tracking-wide text-white transition-colors duration-300 hover:bg-brand-navyLight"
+                prefetch="intent"
+                to="/contact"
+              >
+                {page.ctaButton?.value}
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
@@ -86,6 +163,18 @@ const PAGE_QUERY = `#graphql
       seo {
         description
         title
+      }
+      subtitle: metafield(namespace: "custom", key: "subtitle") {
+        value
+      }
+      introText: metafield(namespace: "custom", key: "intro_text") {
+        value
+      }
+      ctaContent: metafield(namespace: "custom", key: "cta_content") {
+        value
+      }
+      ctaButton: metafield(namespace: "custom", key: "cta_button") {
+        value
       }
     }
   }
